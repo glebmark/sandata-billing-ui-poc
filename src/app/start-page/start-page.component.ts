@@ -12,9 +12,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
       </ul>
     </nav>
     <router-outlet />
-  </div>
-`,
-imports: [RouterLink, RouterOutlet],
-//   styleUrls: ['./start-page.component.css']
+  </div>`,
+  imports: [RouterLink, RouterOutlet],
 })
 export class StartPageComponent {}
