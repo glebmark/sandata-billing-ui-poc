@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ServiceRatePageComponent } from './service-rate.component';
 
 @Component({
   selector: 'app-rate-page',
   template: `
     <mat-tab-group>
       <mat-tab label="Service Rates">
-        <app-rate-page></app-rate-page>
+        <!-- TODO add doc/flat view switcher -->
+        <app-service-rate-page />
       </mat-tab>
       <mat-tab label="Exchange Profiles">
         <!-- Content for Exchange Profiles -->
       </mat-tab>
     </mat-tab-group>
   `,
-//   styleUrls: ['./rate-page.component.css']
-imports: [MatTabsModule]
+imports: [MatTabsModule, ServiceRatePageComponent]
 })
 export class RatePageComponent implements OnInit {
 
