@@ -1,0 +1,52 @@
+<form [formGroup]="rateForm">
+  <div class="form-row">
+    <mat-form-field>
+      <mat-label>EVV Identifier</mat-label>
+      <input matInput formControlName="evvIdentifier">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Event Code</mat-label>
+      <input matInput formControlName="eventCode">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Effective Date</mat-label>
+      <input matInput formControlName="effectiveDate">
+    </mat-form-field>
+  </div>
+  <div class="form-row">
+    <mat-form-field>
+      <mat-label>Service</mat-label>
+      <input matInput formControlName="service">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Modifier</mat-label>
+      <input matInput formControlName="modifier">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Revcode</mat-label>
+      <input matInput formControlName="revcode">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <input matInput formControlName="description">
+    </mat-form-field>
+  </div>
+  <div class="form-row">
+    <mat-form-field>
+      <mat-label>Payer</mat-label>
+      <input matInput formControlName="payer">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Program</mat-label>
+      <input matInput formControlName="program">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Member ID</mat-label>
+      <input matInput formControlName="memberId">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Tags</mat-label>
+      <input matInput formControlName="tags">
+    </mat-form-field>
+  </div>
+</form>
