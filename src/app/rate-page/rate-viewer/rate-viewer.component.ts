@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
@@ -15,7 +16,10 @@ import { MatTabsModule } from '@angular/material/tabs';
         MatInputModule, 
         MatDatepickerModule,
         MatTabsModule,
-        ReactiveFormsModule],
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatOptionModule,
+      ],
   styleUrls: ['./rate-viewer.component.css']
 })
 export class RateViewerComponent {
@@ -33,7 +37,9 @@ export class RateViewerComponent {
       payer: [''],
       program: [''],
       memberId: [''],
-      tags: ['']
+      tags: [''],
+      copayType: [''],
+      copayRate: ['']
     });
   }
 }

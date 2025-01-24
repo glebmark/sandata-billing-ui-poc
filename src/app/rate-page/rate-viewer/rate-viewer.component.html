@@ -49,4 +49,19 @@
       <input matInput formControlName="tags">
     </mat-form-field>
   </div>
+  <div class="form-row">
+    <mat-form-field>
+      <mat-label>Copay Type</mat-label>
+      <mat-select formControlName="copayType">
+        <mat-option value="no-copay">No copay</mat-option>
+        <mat-option value="per-diem">Copay Type: Per Diem</mat-option>
+        <mat-option value="hourly">Copay Type: Hourly</mat-option>
+        <mat-option value="percentage">Copay Type: Percentage</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Copay Rate</mat-label>
+      <input matInput formControlName="copayRate">
+    </mat-form-field>
+  </div>
 </form>
