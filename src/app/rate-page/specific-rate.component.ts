@@ -3,6 +3,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-service-specific-rate-page',
@@ -13,24 +14,28 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-    
+    <!-- TODO add two buttons: copy rate and add rate -->
     @if (isBase) {
-        <div>
-            <h2>Base Rates</h2>
-            <p>Base rates are the rates that are used to calculate the rates for the DHCFP and WELLSKY profiles.</p>
-        </div>
+        <!-- TODO add table -->
     } @else {
-        <div>
-            <h2>DHCFP Rates</h2>
-            <p>DHCFP rates are the rates that are used to calculate the rates for the DHCFP profile.</p>
-        </div>
+        <!-- TODO add to both tabs "Payor specific rates. Effective date:" 
+         with switcher to Client specific rates-->
+        <mat-tab-group>
+            <mat-tab label="Any program">
+                <!-- TODO add table -->
+            </mat-tab>
+            <mat-tab label="EPD">
+                <!-- TODO add table -->
+            </mat-tab>
+        </mat-tab-group>
     }`,
 
    imports: [
     MatNativeDateModule, 
     MatFormFieldModule, 
     MatInputModule, 
-    MatDatepickerModule]
+    MatDatepickerModule,
+    MatTabsModule]
 })
 export class ServiceSpecificRatePageComponent implements OnInit {
 
