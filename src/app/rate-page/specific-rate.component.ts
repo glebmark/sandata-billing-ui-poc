@@ -4,6 +4,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTabsModule } from '@angular/material/tabs';
+import { RatesListViewerComponent } from './rates-list-viewer.component';
 
 @Component({
   selector: 'app-service-specific-rate-page',
@@ -16,16 +17,16 @@ import { MatTabsModule } from '@angular/material/tabs';
     </mat-form-field>
     <!-- TODO add two buttons: copy rate and add rate -->
     @if (isBase) {
-        <!-- TODO add table -->
+        <app-rates-list-viewer />
     } @else {
         <!-- TODO add to both tabs "Payor specific rates. Effective date:" 
          with switcher to Client specific rates-->
         <mat-tab-group>
             <mat-tab label="Any program">
-                <!-- TODO add table -->
+                <app-rates-list-viewer />
             </mat-tab>
             <mat-tab label="EPD">
-                <!-- TODO add table -->
+                <app-rates-list-viewer />
             </mat-tab>
         </mat-tab-group>
     }`,
@@ -35,7 +36,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatFormFieldModule, 
     MatInputModule, 
     MatDatepickerModule,
-    MatTabsModule]
+    MatTabsModule,
+    RatesListViewerComponent]
 })
 export class ServiceSpecificRatePageComponent implements OnInit {
 
