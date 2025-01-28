@@ -64,4 +64,27 @@
       <input matInput formControlName="copayRate">
     </mat-form-field>
   </div>
+  <div class="form-row">
+    <mat-form-field>
+      <mat-label>Claim Type</mat-label>
+      <mat-select formControlName="claimType">
+        <mat-option value="professional">Professional</mat-option>
+        <mat-option value="institutional">Institutional</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Roll Up Type</mat-label>
+      <mat-select formControlName="rollUpType">
+        <mat-option value="default">Roll Up Type: Default</mat-option>
+        <mat-option value="per-diem">Roll Up Type: Per Diem</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Place of Service</mat-label>
+      <mat-select formControlName="placeOfService">
+        <mat-option value="pharmacy">01 - Pharmacy</mat-option>
+        <mat-option value="school">03 - School</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 </form>

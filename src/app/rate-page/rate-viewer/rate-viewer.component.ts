@@ -10,16 +10,16 @@ import { MatTabsModule } from '@angular/material/tabs';
 @Component({
   selector: 'app-rate-viewer',
   templateUrl: './rate-viewer.component.html',
-    imports: [
-        MatNativeDateModule, 
-        MatFormFieldModule, 
-        MatInputModule, 
-        MatDatepickerModule,
-        MatTabsModule,
-        ReactiveFormsModule,
-        MatSelectModule,
-        MatOptionModule,
-      ],
+  imports: [
+      MatNativeDateModule, 
+      MatFormFieldModule, 
+      MatInputModule, 
+      MatDatepickerModule,
+      MatTabsModule,
+      ReactiveFormsModule,
+      MatSelectModule,
+      MatOptionModule,
+    ],
   styleUrls: ['./rate-viewer.component.css']
 })
 export class RateViewerComponent {
@@ -39,7 +39,14 @@ export class RateViewerComponent {
       memberId: [''],
       tags: [''],
       copayType: [''],
-      copayRate: ['']
+      copayRate: [''],
+      claimType: [''],
+      rollUpType: [''],
+      placeOfService: ['']
     });
   }
+
+  // TODO make form submit mock
+  // of endpoint call: pass all form values to service
+  // from all tabs and inputs (there would be multiple forms at once)
 }

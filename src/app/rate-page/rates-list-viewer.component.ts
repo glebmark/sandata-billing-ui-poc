@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
+import { RateEditorComponent } from "./rate-editor.component";
 
 @Component({
     selector: "app-rates-list-viewer",
@@ -49,6 +50,7 @@ import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
                         <div class="example-element-diagram">
                             <!-- Details for {{element.evvIdentifier}} -->
                             <app-rate-viewer /> <!-- TODO pass data into component -->
+                            <app-rate-editor />
                         </div>
                     </div>
                 </td>
@@ -91,7 +93,7 @@ import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
             transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ]),
     ],
-    imports: [MatTableModule, RateViewerComponent]
+    imports: [MatTableModule, RateViewerComponent, RateEditorComponent]
 })
 export class RatesListViewerComponent {
     welcome = "Welcome to the Rates List Viewer!";
