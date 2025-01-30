@@ -1,8 +1,11 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
 import { RateEditorComponent } from "./rate-editor.component";
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: "app-rates-list-viewer",
@@ -48,9 +51,12 @@ import { RateEditorComponent } from "./rate-editor.component";
                     <div class="example-element-detail"
                          [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                         <div class="example-element-diagram">
-                            <!-- Details for {{element.evvIdentifier}} -->
-                            <app-rate-viewer /> <!-- TODO pass data into component -->
-                            <app-rate-editor />
+                            <app-rate-viewer />
+                            <app-rate-editor (formOutput)="getRateFormOutput($event)" />
+                            <button mat-raised-button color="primary" (click)="emitRateForms()">Save</button>
+                            <button mat-raised-button color="primary">Save as new</button>
+                            <button mat-raised-button color="primary">Delete</button>
+                            <button mat-raised-button color="primary">Cancel</button>
                         </div>
                     </div>
                 </td>
@@ -93,13 +99,29 @@ import { RateEditorComponent } from "./rate-editor.component";
             transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ]),
     ],
-    imports: [MatTableModule, RateViewerComponent, RateEditorComponent]
+    imports: [
+        MatTableModule, 
+        RateViewerComponent, 
+        RateEditorComponent,
+        MatButtonModule, 
+        MatDividerModule, 
+        MatIconModule
+    ]
 })
 export class RatesListViewerComponent {
     welcome = "Welcome to the Rates List Viewer!";
     displayedColumns: string[] = ['evvIdentifier', 'eventCode', 'effectiveDate', 'service', 'rate', 'copay', 'description'];
     dataSource = new MatTableDataSource(ELEMENT_DATA);
     expandedElement: RateElement | null = null;
+    @ViewChild(RateEditorComponent) rateEditorComponent!: RateEditorComponent;
+
+    emitRateForms() {
+        this.rateEditorComponent.pickDate();
+    }
+
+    getRateFormOutput(date: any):void {
+        console.log('1 Picked date: ', date);
+    }
 }
 
 export interface RateElement {

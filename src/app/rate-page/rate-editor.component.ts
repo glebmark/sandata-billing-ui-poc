@@ -1,5 +1,5 @@
-import { Component, Input } from "@angular/core";
-import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Component, EventEmitter, Output } from "@angular/core";
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 import { MatTabsModule } from "@angular/material/tabs";
 import { RateDynamicSubeditorComponent } from "./rate-dynamic-subeditor.component";
@@ -14,7 +14,7 @@ import { RateDynamicSubeditorComponent } from "./rate-dynamic-subeditor.componen
                 <div class="form-row">
                     <mat-form-field>
                         <mat-label>Rate</mat-label>
-                        <input matInput formControlName="static" placeholder="$" />
+                        <input matInput formControlName="rateStatic" placeholder="$" />
                     </mat-form-field>
                 </div>
             </form>
@@ -23,17 +23,15 @@ import { RateDynamicSubeditorComponent } from "./rate-dynamic-subeditor.componen
             <app-rate-dynamic-subeditor />
         </mat-tab>
     </mat-tab-group>
-
 
     <h3>Weekend Rate:</h3>
     <mat-tab-group>
-        <mat-tab label="No"></mat-tab>
         <mat-tab label="Static">
             <form [formGroup]="rateForm">
                 <div class="form-row">
                     <mat-form-field>
                         <mat-label>Rate</mat-label>
-                        <input matInput formControlName="static" placeholder="$" />
+                        <input matInput formControlName="weekendRateStatic" placeholder="$" />
                     </mat-form-field>
                 </div>
             </form>
@@ -43,16 +41,14 @@ import { RateDynamicSubeditorComponent } from "./rate-dynamic-subeditor.componen
         </mat-tab>
     </mat-tab-group>
 
-
     <h3>Holiday rate:</h3>
     <mat-tab-group>
-        <mat-tab label="No"></mat-tab>
         <mat-tab label="Static">
             <form [formGroup]="rateForm">
                 <div class="form-row">
                     <mat-form-field>
                         <mat-label>Rate</mat-label>
-                        <input matInput formControlName="static" placeholder="$" />
+                        <input matInput formControlName="holidayRateStatic" placeholder="$" />
                     </mat-form-field>
                 </div>
             </form>
@@ -71,11 +67,15 @@ import { RateDynamicSubeditorComponent } from "./rate-dynamic-subeditor.componen
     })
 export class RateEditorComponent {
 
-    rateForm: FormGroup;
-    
-    constructor(private fb: FormBuilder) {
-        this.rateForm = this.fb.group({
-            rate: [''],
-        });
+    @Output() formOutput = new EventEmitter<any>();
+
+    rateForm = new FormGroup({
+        rateStatic: new FormControl(''),
+        weekendRateStatic: new FormControl(''),
+        holidayRateStatic: new FormControl(''),
+      });
+
+    public pickDate(): void {
+        this.formOutput.emit(this.rateForm.value);
     }
 }
