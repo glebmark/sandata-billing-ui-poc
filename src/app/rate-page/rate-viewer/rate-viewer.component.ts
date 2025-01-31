@@ -23,6 +23,7 @@ import { MatTabsModule } from '@angular/material/tabs';
   styleUrls: ['./rate-viewer.component.css']
 })
 export class RateViewerComponent {
+  // TODO pass data
   rateForm: FormGroup;
 
   constructor(private fb: FormBuilder) {

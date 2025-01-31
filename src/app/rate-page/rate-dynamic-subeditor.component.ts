@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 
 // TODO implement formula of
@@ -27,18 +27,31 @@ import { MatInputModule } from "@angular/material/input";
     </form>
     `,
     imports: [
-        MatInputModule, 
+        MatInputModule,
         ReactiveFormsModule,
         ],
     })
 export class RateDynamicSubeditorComponent {
-      rateForm: FormGroup;
+
+    @Input() rateType!: "generalRate" | "weekendRate" | "holidayRate";
+
+    @Output() formOutput = new EventEmitter<any>();
     
-      constructor(private fb: FormBuilder) {
-        this.rateForm = this.fb.group({
-          units: [''],
-          rate: [''],
-          modifier: [''],
+    rateForm = new FormGroup({
+        units: new FormControl(''),
+        rate: new FormControl(''),
+        modifier: new FormControl(''),
+    });
+
+    constructor() {
+        console.log(this.rateType)
+    }
+
+    public emitRateForms(): void {
+        console.log('inside dynamic-subeditor: emitRateForms:', this.rateForm.value, this.rateType);
+        this.formOutput.emit({
+            rateType: this.rateType,
+            ...this.rateForm.value
         });
     }
 }

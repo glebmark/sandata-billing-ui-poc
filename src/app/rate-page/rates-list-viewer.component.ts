@@ -6,6 +6,7 @@ import { RateEditorComponent } from "./rate-editor.component";
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
+import { RateDynamicSubeditorComponent } from "./rate-dynamic-subeditor.component";
 
 @Component({
     selector: "app-rates-list-viewer",
@@ -110,17 +111,23 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class RatesListViewerComponent {
     welcome = "Welcome to the Rates List Viewer!";
+
     displayedColumns: string[] = ['evvIdentifier', 'eventCode', 'effectiveDate', 'service', 'rate', 'copay', 'description'];
+
     dataSource = new MatTableDataSource(ELEMENT_DATA);
+
     expandedElement: RateElement | null = null;
+
     @ViewChild(RateEditorComponent) rateEditorComponent!: RateEditorComponent;
 
     emitRateForms() {
-        this.rateEditorComponent.pickDate();
+        this.rateEditorComponent.emitRateForms();
+
+        // this.rateDynamicSubeditorComponent.emitRateForms();
     }
 
     getRateFormOutput(date: any):void {
-        console.log('1 Picked date: ', date);
+        console.log('Dynamic Subeditor: Picked date: ', date);
     }
 }
 
