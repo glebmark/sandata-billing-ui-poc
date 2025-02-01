@@ -58,7 +58,7 @@ import { RateType } from "./rates-list-viewer.component";
         ReactiveFormsModule,
         ],
     })
-export class RateDynamicSubeditorComponent implements OnInit {
+export class RateSubeditorComponent implements OnInit {
     // TODO pass data
 
     rateTypeEnum = RateType

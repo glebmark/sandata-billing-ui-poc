@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { RateDynamicSubeditorComponent } from "./rate-dynamic-subeditor.component";
+import { RateSubeditorComponent } from "./rate-subeditor.component";
 import { CommonModule } from '@angular/common';
 import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
 
@@ -122,7 +122,7 @@ export enum RateType {
         MatDividerModule,
         MatIconModule,
         ReactiveFormsModule,
-        RateDynamicSubeditorComponent,
+        RateSubeditorComponent,
         RateViewerComponent
     ]
 })

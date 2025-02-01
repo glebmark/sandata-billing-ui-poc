@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { ViewsPageComponent } from './views-page/views-page.component';
 import { RatePageComponent } from './rate-page/rate-page.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { RateDynamicSubeditorComponent } from './rate-page/rate-dynamic-subeditor.component';
+import { RateSubeditorComponent } from './rate-page/rate-subeditor.component';
 import { RatesListViewerComponent } from './rate-page/rates-list-viewer.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
@@ -30,7 +30,7 @@ import { RateViewerComponent } from './rate-page/rate-viewer/rate-viewer.compone
     ViewsPageComponent,
     RatePageComponent,
     RatesListViewerComponent,
-    RateDynamicSubeditorComponent,
+    RateSubeditorComponent,
     RateViewerComponent
   ],
   providers: [],
