@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { ControlContainer, FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +10,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 @Component({
   selector: 'app-rate-viewer',
   templateUrl: './rate-viewer.component.html',
+  viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
   imports: [
       MatNativeDateModule, 
       MatFormFieldModule, 
@@ -22,34 +23,18 @@ import { MatTabsModule } from '@angular/material/tabs';
     ],
   styleUrls: ['./rate-viewer.component.css']
 })
-export class RateViewerComponent {
+export class RateViewerComponent implements OnInit {
   // TODO pass data
-  rateForm: FormGroup;
 
-  // TODO rewrite to fromControls
-  // remove this form! and add it to the parent component
-  constructor(private fb: FormBuilder) {
-    this.rateForm = this.fb.group({
-      evvIdentifier: [''],
-      eventCode: [''],
-      effectiveDate: [''],
-      service: [''],
-      modifier: [''],
-      revcode: [''],
-      description: [''],
-      payer: [''],
-      program: [''],
-      memberId: [''],
-      tags: [''],
-      copayType: [''],
-      copayRate: [''],
-      claimType: [''],
-      rollUpType: [''],
-      placeOfService: ['']
-    });
+  @Input() formGroupIndex!: number;
+  @Input() rateType!: string;
+
+  form!: FormGroup;
+
+  constructor(private controlContainer: ControlContainer) {
   }
 
-  // TODO make form submit mock
-  // of endpoint call: pass all form values to service
-  // from all tabs and inputs (there would be multiple forms at once)
+  ngOnInit(): void {
+    this.form  = this.controlContainer.control?.get('rateViewerForm') as FormGroup;
+  }
 }

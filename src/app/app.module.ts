@@ -13,15 +13,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { RateViewerComponent } from './rate-page/rate-viewer/rate-viewer.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ViewsPageComponent,
-    RatePageComponent,
-    RatesListViewerComponent,
-    RateDynamicSubeditorComponent
-  ],
   imports: [
     BrowserModule,
     CommonModule,
@@ -31,9 +25,15 @@ import { CommonModule } from '@angular/common';
     MatTableModule, 
     MatButtonModule, 
     MatDividerModule, 
-    MatIconModule
+    MatIconModule,
+    AppComponent,
+    ViewsPageComponent,
+    RatePageComponent,
+    RatesListViewerComponent,
+    RateDynamicSubeditorComponent,
+    RateViewerComponent
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  // bootstrap: [AppComponent]
 })
 export class AppModule {}

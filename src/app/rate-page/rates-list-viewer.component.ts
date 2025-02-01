@@ -9,6 +9,12 @@ import { RateDynamicSubeditorComponent } from "./rate-dynamic-subeditor.componen
 import { CommonModule } from '@angular/common';
 import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
 
+export enum RateType {
+    GeneralRate = 'generalRate',
+    WeekendRate = 'weekendRate',
+    HolidayRate = 'holidayRate'
+}
+
 @Component({
     selector: "app-rates-list-viewer",
     template: `
@@ -57,15 +63,9 @@ import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
                             <form [formGroup]="rateForm">
                                 <app-rate-viewer />
                                 <div formArrayName="rateSubeditorForms">
-
-                                    <!-- @for (rateSubeditorForm of rateSubeditorForms; track rateSubeditorForm.id) {
-                                        <app-rate-dynamic-subeditor [formGroupIndex]="i" [rateType]="rateTypes[i]" />
-                                    } -->
-
                                     <div *ngFor="let rateSubeditorForm of rateSubeditorForms.controls; let i = index">
                                         <app-rate-dynamic-subeditor [formGroupIndex]="i" [rateType]="rateTypes[i]" />
                                     </div>
-
                                 </div>
                                 <!-- <button type="submit" (click)="onSubmit()">Submit</button> -->
                                 <button mat-raised-button color="primary" (click)="getFormInput()">Save</button>
@@ -117,12 +117,12 @@ import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
     ],
     imports: [
         CommonModule,
-        MatTableModule, 
-        MatButtonModule, 
-        MatDividerModule, 
+        MatTableModule,
+        MatButtonModule,
+        MatDividerModule,
         MatIconModule,
-        RateDynamicSubeditorComponent,
         ReactiveFormsModule,
+        RateDynamicSubeditorComponent,
         RateViewerComponent
     ]
 })
@@ -135,12 +135,27 @@ export class RatesListViewerComponent {
 
     expandedElement: RateElement | null = null;
 
-    rateTypes = ['generalRate', 'weekendRate','holidayRate'];
-
-    // rateForm: FormGroup;
+    rateTypes = [RateType.GeneralRate, RateType.WeekendRate, RateType.HolidayRate];
 
     rateForm = new FormGroup({
-        // TODO add rateViewer component's group form
+        rateViewerForm: new FormGroup({
+            evvIdentifier: new FormControl(''),
+            eventCode: new FormControl(''),
+            effectiveDate: new FormControl(''),
+            service: new FormControl(''),
+            modifier: new FormControl(''),
+            revcode: new FormControl(''),
+            description: new FormControl(''),
+            payer: new FormControl(''),
+            program: new FormControl(''),
+            memberId: new FormControl(''),
+            tags: new FormControl(''),
+            copayType: new FormControl(''),
+            copayRate: new FormControl(''),
+            claimType: new FormControl(''),
+            rollUpType: new FormControl(''),
+            placeOfService: new FormControl('')
+        }),
         rateSubeditorForms: new FormArray([
             this.createRateSubeditorForm(this.rateTypes[0]),
             this.createRateSubeditorForm(this.rateTypes[1]),
@@ -150,7 +165,6 @@ export class RatesListViewerComponent {
 
     createRateSubeditorForm(rateType: string): FormGroup {
         return new FormGroup({
-            name: new FormControl(rateType), // why?
             rateType: new FormControl(rateType),
             staticRate: new FormControl(''),
             dynamicUnits: new FormControl(''),
@@ -166,6 +180,10 @@ export class RatesListViewerComponent {
     getFormInput(): void {
         console.log('Data from forms in Parent:');
         console.log(this.rateForm.value);
+
+        // TODO make form submit mock
+        // of endpoint call: pass all form values to service
+        // from all tabs and inputs (there would be multiple forms at once)
     }
 }
 
