@@ -1,12 +1,13 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
-import { RateEditorComponent } from "./rate-editor.component";
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { RateDynamicSubeditorComponent } from "./rate-dynamic-subeditor.component";
+import { CommonModule } from '@angular/common';
+import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
 
 @Component({
     selector: "app-rates-list-viewer",
@@ -52,12 +53,26 @@ import { RateDynamicSubeditorComponent } from "./rate-dynamic-subeditor.componen
                     <div class="example-element-detail"
                          [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                         <div class="example-element-diagram">
-                            <app-rate-viewer />
-                            <app-rate-editor (formOutput)="getRateFormOutput($event)" />
-                            <button mat-raised-button color="primary" (click)="emitRateForms()">Save</button>
-                            <button mat-raised-button color="primary">Save as new</button>
-                            <button mat-raised-button color="primary">Delete</button>
-                            <button mat-raised-button color="primary">Cancel</button>
+
+                            <form [formGroup]="rateForm">
+                                <app-rate-viewer />
+                                <div formArrayName="rateSubeditorForms">
+
+                                    <!-- @for (rateSubeditorForm of rateSubeditorForms; track rateSubeditorForm.id) {
+                                        <app-rate-dynamic-subeditor [formGroupIndex]="i" [rateType]="rateTypes[i]" />
+                                    } -->
+
+                                    <div *ngFor="let rateSubeditorForm of rateSubeditorForms.controls; let i = index">
+                                        <app-rate-dynamic-subeditor [formGroupIndex]="i" [rateType]="rateTypes[i]" />
+                                    </div>
+
+                                </div>
+                                <!-- <button type="submit" (click)="onSubmit()">Submit</button> -->
+                                <button mat-raised-button color="primary" (click)="getFormInput()">Save</button>
+                                <button mat-raised-button color="primary">Save as new</button>
+                                <button mat-raised-button color="primary">Delete</button>
+                                <button mat-raised-button color="primary">Cancel</button>
+                            </form>
                         </div>
                     </div>
                 </td>
@@ -101,12 +116,14 @@ import { RateDynamicSubeditorComponent } from "./rate-dynamic-subeditor.componen
         ]),
     ],
     imports: [
+        CommonModule,
         MatTableModule, 
-        RateViewerComponent, 
-        RateEditorComponent,
         MatButtonModule, 
         MatDividerModule, 
-        MatIconModule
+        MatIconModule,
+        RateDynamicSubeditorComponent,
+        ReactiveFormsModule,
+        RateViewerComponent
     ]
 })
 export class RatesListViewerComponent {
@@ -118,16 +135,37 @@ export class RatesListViewerComponent {
 
     expandedElement: RateElement | null = null;
 
-    @ViewChild(RateEditorComponent) rateEditorComponent!: RateEditorComponent;
+    rateTypes = ['generalRate', 'weekendRate','holidayRate'];
 
-    emitRateForms() {
-        this.rateEditorComponent.emitRateForms();
+    // rateForm: FormGroup;
 
-        // this.rateDynamicSubeditorComponent.emitRateForms();
+    rateForm = new FormGroup({
+        // TODO add rateViewer component's group form
+        rateSubeditorForms: new FormArray([
+            this.createRateSubeditorForm(this.rateTypes[0]),
+            this.createRateSubeditorForm(this.rateTypes[1]),
+            this.createRateSubeditorForm(this.rateTypes[2]),
+        ])
+    });
+
+    createRateSubeditorForm(rateType: string): FormGroup {
+        return new FormGroup({
+            name: new FormControl(rateType), // why?
+            rateType: new FormControl(rateType),
+            staticRate: new FormControl(''),
+            dynamicUnits: new FormControl(''),
+            dynamicRate: new FormControl(''),
+            dynamicModifier: new FormControl(''),
+        })
     }
 
-    getRateFormOutput(date: any):void {
-        console.log('Dynamic Subeditor: Picked date: ', date);
+    get rateSubeditorForms(): FormArray {
+        return this.rateForm.get('rateSubeditorForms') as FormArray;
+    }
+
+    getFormInput(): void {
+        console.log('Data from forms in Parent:');
+        console.log(this.rateForm.value);
     }
 }
 

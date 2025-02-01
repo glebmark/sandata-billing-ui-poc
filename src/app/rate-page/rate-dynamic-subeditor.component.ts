@@ -1,57 +1,52 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Component, Input, OnInit } from "@angular/core";
+import { ControlContainer, FormArray, FormGroup, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
+import { MatTabsModule } from "@angular/material/tabs";
 
 // TODO implement formula of
 // dynamic rate calculation
 @Component({
     selector: "app-rate-dynamic-subeditor",
     template: `
-    <form [formGroup]="rateForm">
-        <div class="form-row">
-            <mat-form-field>
-                <mat-label>Units</mat-label>
-                <input matInput formControlName="units" />
-            </mat-form-field>
-            units per
-            <mat-form-field>
-                <mat-label>Rate</mat-label>
-                <input matInput formControlName="rate" placeholder="$" />
-            </mat-form-field>
-            with modifier
-            <mat-form-field>
-                <mat-label>Modifier</mat-label>
-                <input matInput formControlName="modifier" />
-            </mat-form-field>
-        </div>
-    </form>
+    <div [formGroup]="form">
+      <label for="name">Name</label>
+      <input id="name" formControlName="name" matInput readonly>
+      
+      <label for="rateType">Rate Type</label>
+      <input id="rateType" formControlName="rateType" matInput readonly>
+      
+      <label for="staticRate">Static Rate</label>
+      <input id="staticRate" formControlName="staticRate" matInput>
+      
+      <label for="dynamicUnits">Dynamic Units</label>
+      <input id="dynamicUnits" formControlName="dynamicUnits" matInput>
+      
+      <label for="dynamicRate">Dynamic Rate</label>
+      <input id="dynamicRate" formControlName="dynamicRate" matInput>
+      
+      <label for="dynamicModifier">Dynamic Modifier</label>
+      <input id="dynamicModifier" formControlName="dynamicModifier" matInput>
+    </div>
     `,
+    viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
     imports: [
         MatInputModule,
+        MatTabsModule,
         ReactiveFormsModule,
         ],
     })
-export class RateDynamicSubeditorComponent {
+export class RateDynamicSubeditorComponent implements OnInit {
 
-    @Input() rateType!: "generalRate" | "weekendRate" | "holidayRate";
+    @Input() formGroupIndex!: number;
+    @Input() rateType!: string;
 
-    @Output() formOutput = new EventEmitter<any>();
-    
-    rateForm = new FormGroup({
-        units: new FormControl(''),
-        rate: new FormControl(''),
-        modifier: new FormControl(''),
-    });
+    form!: FormGroup;
 
-    constructor() {
-        console.log(this.rateType)
+    constructor(private controlContainer: ControlContainer) {
     }
 
-    public emitRateForms(): void {
-        console.log('inside dynamic-subeditor: emitRateForms:', this.rateForm.value, this.rateType);
-        this.formOutput.emit({
-            rateType: this.rateType,
-            ...this.rateForm.value
-        });
-    }
+    ngOnInit(): void {
+        const formArray = this.controlContainer.control?.get('rateSubeditorForms') as FormArray;
+        this.form = formArray.at(this.formGroupIndex) as FormGroup;
+      }
 }

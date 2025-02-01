@@ -26,6 +26,8 @@ export class RateViewerComponent {
   // TODO pass data
   rateForm: FormGroup;
 
+  // TODO rewrite to fromControls
+  // remove this form! and add it to the parent component
   constructor(private fb: FormBuilder) {
     this.rateForm = this.fb.group({
       evvIdentifier: [''],
