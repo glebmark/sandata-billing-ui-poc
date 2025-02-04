@@ -66,7 +66,8 @@ export class SyncComponent {
             });
 
 
+            // TODO
             // sync data with output to views-page
-    // emit data here
+            // emit data here
         }
 }

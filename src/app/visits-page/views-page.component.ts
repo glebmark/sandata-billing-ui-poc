@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { SyncComponent } from './sync.component';
 import { CommonModule } from '@angular/common';
+import { FiltersAndTableOfVisitsComponent } from './filters-and-table-of-visits.component';
 
 @Component({
   selector: 'app-views-page',
   template: `
     <div>
-      Views Page
-      <app-sync></app-sync>
+      <app-sync />
+      <app-filters-and-table-of-visits />
     </div>
   `,
-  imports: [CommonModule, SyncComponent]
+  imports: [CommonModule, SyncComponent, FiltersAndTableOfVisitsComponent]
 })
 export class ViewsPageComponent implements OnInit {
 
