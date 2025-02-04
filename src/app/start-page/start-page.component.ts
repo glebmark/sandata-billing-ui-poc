@@ -16,3 +16,6 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   imports: [RouterLink, RouterOutlet],
 })
 export class StartPageComponent {}
+
+// TODO make backlinks to startpage from rates and views
+// add "pwd" of pages
