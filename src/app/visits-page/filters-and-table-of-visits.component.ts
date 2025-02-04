@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
     selector: "app-filters-and-table-of-visits",
@@ -21,6 +22,13 @@ import { CommonModule } from '@angular/common';
         <mat-menu #menu="matMenu">
             <mat-checkbox *ngFor="let column of allColumns" [(ngModel)]="column.visible" (change)="updateDisplayedColumns()"> {{column.name}} </mat-checkbox>
         </mat-menu>
+        <div class="filter-container">
+            <ng-container *ngFor="let column of allColumns">
+                <mat-form-field class="filter-field" *ngIf="column.visible">
+                    <input matInput (keyup)="applyFilter($event, column.def)" placeholder="Filter {{column.name}}">
+                </mat-form-field>
+            </ng-container>
+        </div>
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container *ngFor="let column of allColumns">
                 <ng-container *ngIf="column.visible" [matColumnDef]="column.def">
@@ -33,7 +41,7 @@ import { CommonModule } from '@angular/common';
         </table>
     </div>
     `,
-    imports: [FiltersOfVisitsComponent, TableOfVisitsComponent, MatTableModule, MatSortModule, MatCheckboxModule, MatButtonModule, MatMenuModule, FormsModule, CommonModule]
+    imports: [FiltersOfVisitsComponent, TableOfVisitsComponent, MatTableModule, MatSortModule, MatCheckboxModule, MatButtonModule, MatMenuModule, FormsModule, CommonModule, MatInputModule]
 })
 export class FiltersAndTableOfVisitsComponent {
     @ViewChild(MatSort) sort!: MatSort;
@@ -59,6 +67,21 @@ export class FiltersAndTableOfVisitsComponent {
 
     updateDisplayedColumns() {
         this.displayedColumns = this.allColumns.filter(column => column.visible).map(column => column.def);
+    }
+
+    applyFilter(keyboardEvent: KeyboardEvent, column: string) {
+
+        const inputElement = keyboardEvent.target as HTMLInputElement;
+        const filterValue = inputElement.value.trim().toLowerCase();
+
+        this.dataSource.filterPredicate = (data: any, filter: string) => {
+            const accumulator = (currentTerm: any, key: any) => {
+                return key === column ? currentTerm + data[key] : currentTerm;
+            };
+            const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
+            return dataStr.indexOf(filter) !== -1;
+        };
+        this.dataSource.filter = filterValue;
     }
 }
 
