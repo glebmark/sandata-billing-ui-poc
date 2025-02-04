@@ -4,62 +4,61 @@ import { TableOfVisitsComponent } from "./table-of-visits.component";
 import { MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: "app-filters-and-table-of-visits",
+    // TODO fix checkbox menu so it won't be closed after one click on checkbox
     template: `
     <div>
         <app-filters-of-visits></app-filters-of-visits>
         <app-table-of-visits></app-table-of-visits>
+        <button mat-button [matMenuTriggerFor]="menu">Toggle Columns</button>
+        <mat-menu #menu="matMenu">
+            <mat-checkbox *ngFor="let column of allColumns" [(ngModel)]="column.visible" (change)="updateDisplayedColumns()"> {{column.name}} </mat-checkbox>
+        </mat-menu>
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-            <ng-container matColumnDef="clientName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Client Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
-            </ng-container>
-            <ng-container matColumnDef="serviceBeginDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Service Begin Date </th>
-                <td mat-cell *matCellDef="let element"> {{element.serviceBeginDate}} </td>
-            </ng-container>
-            <ng-container matColumnDef="serviceEndDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Service End Date </th>
-                <td mat-cell *matCellDef="let element"> {{element.serviceEndDate}} </td>
-            </ng-container>
-            <ng-container matColumnDef="units">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Units </th>
-                <td mat-cell *matCellDef="let element"> {{element.units}} </td>
-            </ng-container>
-            <ng-container matColumnDef="service">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Service </th>
-                <td mat-cell *matCellDef="let element"> {{element.service}} </td>
-            </ng-container>
-            <ng-container matColumnDef="payer">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Payer </th>
-                <td mat-cell *matCellDef="let element"> {{element.payer}} </td>
-            </ng-container>
-            <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-            </ng-container>
-            <ng-container matColumnDef="elapsedDays">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Elapsed Days </th>
-                <td mat-cell *matCellDef="let element"> {{element.elapsedDays}} </td>
+            <ng-container *ngFor="let column of allColumns">
+                <ng-container *ngIf="column.visible" [matColumnDef]="column.def">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column.name}} </th>
+                    <td mat-cell *matCellDef="let element"> {{element[column.def]}} </td>
+                </ng-container>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </div>
     `,
-    imports: [FiltersOfVisitsComponent, TableOfVisitsComponent, MatTableModule, MatSortModule]
+    imports: [FiltersOfVisitsComponent, TableOfVisitsComponent, MatTableModule, MatSortModule, MatCheckboxModule, MatButtonModule, MatMenuModule, FormsModule, CommonModule]
 })
 export class FiltersAndTableOfVisitsComponent {
     @ViewChild(MatSort) sort!: MatSort;
 
-    displayedColumns: string[] = ['clientName', 'serviceBeginDate', 'serviceEndDate', 'units', 'service', 'payer', 'status', 'elapsedDays'];
+    allColumns = [
+        { name: 'Client Name', def: 'clientName', visible: true },
+        { name: 'Service Begin Date', def: 'serviceBeginDate', visible: true },
+        { name: 'Service End Date', def: 'serviceEndDate', visible: true },
+        { name: 'Units', def: 'units', visible: true },
+        { name: 'Service', def: 'service', visible: true },
+        { name: 'Payer', def: 'payer', visible: true },
+        { name: 'Status', def: 'status', visible: true },
+        { name: 'Elapsed Days', def: 'elapsedDays', visible: true }
+    ];
+
+    displayedColumns: string[] = this.allColumns.map(column => column.def);
 
     dataSource = new MatTableDataSource(ELEMENT_DATA);
 
     ngAfterViewInit() {
         this.dataSource.sort = this.sort;
+    }
+
+    updateDisplayedColumns() {
+        this.displayedColumns = this.allColumns.filter(column => column.visible).map(column => column.def);
     }
 }
 
