@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SyncComponent } from './sync.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-views-page',
@@ -9,7 +10,7 @@ import { SyncComponent } from './sync.component';
       <app-sync></app-sync>
     </div>
   `,
-  imports: [SyncComponent]
+  imports: [CommonModule, SyncComponent]
 })
 export class ViewsPageComponent implements OnInit {
 

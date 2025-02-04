@@ -12,13 +12,12 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
 import { RateViewerComponent } from './rate-page/rate-viewer/rate-viewer.component';
+import { SyncComponent } from './views-page/sync.component';
 
 @NgModule({
   imports: [
     BrowserModule,
-    CommonModule,
     AppRoutingModule,
     MatTabsModule,
     ReactiveFormsModule,
@@ -27,13 +26,13 @@ import { RateViewerComponent } from './rate-page/rate-viewer/rate-viewer.compone
     MatDividerModule, 
     MatIconModule,
     AppComponent,
-    ViewsPageComponent,
     RatePageComponent,
     RatesListViewerComponent,
     RateSubeditorComponent,
-    RateViewerComponent
+    RateViewerComponent,
+    SyncComponent,
+    ViewsPageComponent
   ],
   providers: [],
-  // bootstrap: [AppComponent]
 })
 export class AppModule {}

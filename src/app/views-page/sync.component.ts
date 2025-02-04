@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
@@ -6,7 +7,6 @@ import { MatNativeDateModule } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { BrowserModule } from "@angular/platform-browser";
 
 @Component({
     selector: "app-sync",
@@ -28,7 +28,7 @@ import { BrowserModule } from "@angular/platform-browser";
         MatDatepickerModule, 
         MatNativeDateModule,
         MatButtonModule,
-        BrowserModule,
+        CommonModule,
         ReactiveFormsModule]
     })
 export class SyncComponent {
