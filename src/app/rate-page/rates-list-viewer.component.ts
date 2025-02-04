@@ -8,6 +8,7 @@ import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from "@angular
 import { RateSubeditorComponent } from "./rate-subeditor.component";
 import { CommonModule } from '@angular/common';
 import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
+import { HttpClient, HttpParams } from "@angular/common/http";
 
 export enum RateType {
     GeneralRate = 'generalRate',
@@ -59,7 +60,6 @@ export enum RateType {
                     <div class="example-element-detail"
                          [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                         <div class="example-element-diagram">
-
                             <form [formGroup]="rateForm">
                                 <app-rate-viewer />
                                 <div formArrayName="rateSubeditorForms">
@@ -67,11 +67,10 @@ export enum RateType {
                                         <app-rate-dynamic-subeditor [formGroupIndex]="i" [rateType]="rateTypes[i]" />
                                     </div>
                                 </div>
-                                <!-- <button type="submit" (click)="onSubmit()">Submit</button> -->
                                 <button mat-raised-button color="primary" (click)="getFormInput()">Save</button>
-                                <button mat-raised-button color="primary">Save as new</button>
-                                <button mat-raised-button color="primary">Delete</button>
-                                <button mat-raised-button color="primary">Cancel</button>
+                                <button mat-raised-button color="primary" (click)="getFormInput()">Save as new</button>
+                                <button mat-raised-button color="primary">Delete</button> <!-- TODO implement delete action -->
+                                <button mat-raised-button color="primary" (click)="onCancel()">Cancel</button>
                             </form>
                         </div>
                     </div>
@@ -127,6 +126,9 @@ export enum RateType {
     ]
 })
 export class RatesListViewerComponent {
+
+    constructor(private http: HttpClient) {}
+
     welcome = "Welcome to the Rates List Viewer!";
 
     displayedColumns: string[] = ['evvIdentifier', 'eventCode', 'effectiveDate', 'service', 'rate', 'copay', 'description'];
@@ -181,9 +183,59 @@ export class RatesListViewerComponent {
         console.log('Data from forms in Parent:');
         console.log(this.rateForm.value);
 
-        // TODO make form submit mock
-        // of endpoint call: pass all form values to service
-        // from all tabs and inputs (there would be multiple forms at once)
+        // TODO replace 96010 with id
+        // pass url from envs
+        // change payload to proper meta
+
+        sendFormToServer(this.rateForm);
+
+        const params1 = new HttpParams()
+        .set('_format', 'json')
+        .set('_m', 'aidbox.billing.rpc/save-charge-item-def')
+
+        this.http.post(`http://localhost:8080/fhir/Organization/96010/rpc`,
+            this.rateForm.value, 
+            { params: params1 }
+        ).subscribe({
+            next: response => {
+                console.log('Form submitted successfully', response);
+            },
+            error: error => {
+                console.error('Error submitting form', error);
+            }
+        });
+
+        const params2 = new HttpParams()
+            .set('_format', 'json')
+            .set('_m', 'aidbox.billing.rpc/fetch-shift-tracking-shifts');
+
+        this.http.post(`http://localhost:8080/fhir/Organization/96010/rpc`, 
+            this.rateForm.value, { params: params2 }).subscribe({
+            next: response => {
+            console.log('Form submitted successfully', response);
+            },
+            error: error => {
+            console.error('Error submitting form', error);
+            }
+        });
+
+        const params3 = new HttpParams()
+            .set('_format', 'json')
+            .set('_m', 'billing.rpc/get-rates');
+
+        this.http.post(`http://localhost:8080/fhir/Organization/96010/rpc`, 
+            this.rateForm.value, { params: params3 }).subscribe({
+            next: response => {
+            console.log('Form submitted successfully', response);
+            },
+            error: error => {
+            console.error('Error submitting form', error);
+            }
+        });
+    }
+
+    onCancel(): void {
+        this.expandedElement = null;
     }
 }
 
@@ -202,3 +254,7 @@ const ELEMENT_DATA: RateElement[] = [
     {evvIdentifier: 'ID2', eventCode: 'E2', effectiveDate: '2023-02-01', service: 'Service2', rate: '200', copay: '20', description: 'Description2'},
     {evvIdentifier: 'ID3', eventCode: 'E3', effectiveDate: '2023-03-01', service: 'Service3', rate: '300', copay: '30', description: 'Description3'},
 ];
+
+const sendFormToServer = (form: FormGroup) => {
+    console.log(form.value);
+}
