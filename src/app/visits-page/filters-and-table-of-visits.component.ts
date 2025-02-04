@@ -25,7 +25,7 @@ import { MatInputModule } from '@angular/material/input';
         <div class="filter-container">
             <ng-container *ngFor="let column of allColumns">
                 <mat-form-field class="filter-field" *ngIf="column.visible">
-                    <input matInput (keyup)="applyFilter($event, column.def)" placeholder="Filter {{column.name}}">
+                    <input matInput (keyup)="applyFilter($event, column.def)" placeholder="{{column.name}}">
                 </mat-form-field>
             </ng-container>
         </div>
@@ -41,6 +41,17 @@ import { MatInputModule } from '@angular/material/input';
         </table>
     </div>
     `,
+    styles: [`
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .filter-field {
+            flex: 1 1 200px;
+        }
+    `],
     imports: [FiltersOfVisitsComponent, TableOfVisitsComponent, MatTableModule, MatSortModule, MatCheckboxModule, MatButtonModule, MatMenuModule, FormsModule, CommonModule, MatInputModule]
 })
 export class FiltersAndTableOfVisitsComponent {
