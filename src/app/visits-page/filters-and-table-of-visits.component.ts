@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild, ViewChildren, QueryList, ElementRef, AfterViewInit } from "@angular/core";
 import { FiltersOfVisitsComponent } from "./filters-of-visits.component";
 import { TableOfVisitsComponent } from "./table-of-visits.component";
 import { MatTableModule } from '@angular/material/table';
@@ -10,6 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
     selector: "app-filters-and-table-of-visits",
@@ -24,11 +25,18 @@ import { MatInputModule } from '@angular/material/input';
         </mat-menu>
         <div class="filter-container">
             <ng-container *ngFor="let column of allColumns">
-                <mat-form-field class="filter-field" *ngIf="column.visible">
-                    <input matInput (keyup)="applyFilter($event, column.def)" placeholder="{{column.name}}">
+                <mat-form-field class="filter-field" *ngIf="column.visible && column.def !== 'elapsedDays'">
+                    <input matInput *ngIf="column.def !== 'serviceBeginDate' && column.def !== 'serviceEndDate' && column.def !== 'payer'" [(ngModel)]="column.filterValue" (keyup)="applyFilter($event, column.def)" placeholder="{{column.name}}">
+                    <!-- TODO fix date input -->
+                    <input matInput *ngIf="column.def === 'serviceBeginDate' || column.def === 'serviceEndDate'" type="date" [(ngModel)]="column.filterValue" (keyup)="applyFilter($event, column.def)" placeholder="{{column.name}}">
+                    <mat-select *ngIf="column.def === 'payer'" [(ngModel)]="column.filterValue" (selectionChange)="applyFilter($event, column.def)" placeholder="{{column.name}}">
+                        <mat-option value="">None</mat-option>
+                        <mat-option value="DHCFP">DHCFP</mat-option>
+                    </mat-select>
                 </mat-form-field>
             </ng-container>
         </div>
+        <button mat-button (click)="clearFilters()">Clear Filters</button>
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container *ngFor="let column of allColumns">
                 <ng-container *ngIf="column.visible" [matColumnDef]="column.def">
@@ -52,20 +60,21 @@ import { MatInputModule } from '@angular/material/input';
             flex: 1 1 200px;
         }
     `],
-    imports: [FiltersOfVisitsComponent, TableOfVisitsComponent, MatTableModule, MatSortModule, MatCheckboxModule, MatButtonModule, MatMenuModule, FormsModule, CommonModule, MatInputModule]
+    imports: [FiltersOfVisitsComponent, TableOfVisitsComponent, MatTableModule, MatSortModule, MatCheckboxModule, MatButtonModule, MatMenuModule, FormsModule, CommonModule, MatInputModule, MatSelectModule]
 })
-export class FiltersAndTableOfVisitsComponent {
+export class FiltersAndTableOfVisitsComponent implements AfterViewInit {
     @ViewChild(MatSort) sort!: MatSort;
 
     allColumns = [
-        { name: 'Client Name', def: 'clientName', visible: true },
-        { name: 'Service Begin Date', def: 'serviceBeginDate', visible: true },
-        { name: 'Service End Date', def: 'serviceEndDate', visible: true },
-        { name: 'Units', def: 'units', visible: true },
-        { name: 'Service', def: 'service', visible: true },
-        { name: 'Payer', def: 'payer', visible: true },
-        { name: 'Status', def: 'status', visible: true },
-        { name: 'Elapsed Days', def: 'elapsedDays', visible: true }
+        { name: 'First Name', def: 'firstName', visible: true, filterValue: '' },
+        { name: 'Last Name', def: 'lastName', visible: true, filterValue: '' },
+        { name: 'Service Begin Date', def: 'serviceBeginDate', visible: true, filterValue: '' },
+        { name: 'Service End Date', def: 'serviceEndDate', visible: true, filterValue: '' },
+        { name: 'Units', def: 'units', visible: true, filterValue: '' },
+        { name: 'Service', def: 'service', visible: true, filterValue: '' },
+        { name: 'Payer', def: 'payer', visible: true, filterValue: '' },
+        { name: 'Status', def: 'status', visible: true, filterValue: '' },
+        { name: 'Elapsed Days', def: 'elapsedDays', visible: true, filterValue: '' }
     ];
 
     displayedColumns: string[] = this.allColumns.map(column => column.def);
@@ -80,10 +89,8 @@ export class FiltersAndTableOfVisitsComponent {
         this.displayedColumns = this.allColumns.filter(column => column.visible).map(column => column.def);
     }
 
-    applyFilter(keyboardEvent: KeyboardEvent, column: string) {
-
-        const inputElement = keyboardEvent.target as HTMLInputElement;
-        const filterValue = inputElement.value.trim().toLowerCase();
+    applyFilter(event: any, column: string) {
+        const filterValue = event.target ? event.target.value.trim().toLowerCase() : event.value.trim().toLowerCase();
 
         this.dataSource.filterPredicate = (data: any, filter: string) => {
             const accumulator = (currentTerm: any, key: any) => {
@@ -94,12 +101,17 @@ export class FiltersAndTableOfVisitsComponent {
         };
         this.dataSource.filter = filterValue;
     }
+
+    clearFilters() {
+        this.allColumns.forEach(column => column.filterValue = '');
+        this.dataSource.filter = '';
+    }
 }
 
 const ELEMENT_DATA = [
-    {clientName: 'John Doe', serviceBeginDate: '2023-01-01', serviceEndDate: '2023-03-10', units: 5, service: 'T1019_02', payer: 'DHCFP', status: 'Approved', elapsedDays: 452},
-    {clientName: 'Jane Smith', serviceBeginDate: '2023-02-15', serviceEndDate: '2023-04-20', units: 10, service: 'S9123', payer: 'Medicaid', status: 'Pending', elapsedDays: 300},
-    {clientName: 'Alice Johnson', serviceBeginDate: '2023-03-10', serviceEndDate: '2023-05-15', units: 8, service: 'H2015', payer: 'Medicare', status: 'Denied', elapsedDays: 200},
-    {clientName: 'Bob Brown', serviceBeginDate: '2023-04-01', serviceEndDate: '2023-06-10', units: 12, service: 'T1019_01', payer: 'Private', status: 'Approved', elapsedDays: 150},
-    {clientName: 'Charlie Davis', serviceBeginDate: '2023-05-05', serviceEndDate: '2023-07-20', units: 7, service: 'S9124', payer: 'Medicaid', status: 'Pending', elapsedDays: 100},
+    {firstName: 'John', lastName: 'Doe', serviceBeginDate: '2023-01-01', serviceEndDate: '2023-03-10', units: 5, service: 'T1019_02', payer: 'DHCFP', status: 'Approved', elapsedDays: 452},
+    {firstName: 'Jane', lastName: 'Smith', serviceBeginDate: '2023-02-15', serviceEndDate: '2023-04-20', units: 10, service: 'S9123', payer: 'Medicaid', status: 'Pending', elapsedDays: 300},
+    {firstName: 'Alice', lastName: 'Johnson', serviceBeginDate: '2023-03-10', serviceEndDate: '2023-05-15', units: 8, service: 'H2015', payer: 'Medicare', status: 'Denied', elapsedDays: 200},
+    {firstName: 'Bob', lastName: 'Brown', serviceBeginDate: '2023-04-01', serviceEndDate: '2023-06-10', units: 12, service: 'T1019_01', payer: 'Private', status: 'Approved', elapsedDays: 150},
+    {firstName: 'Charlie', lastName: 'Davis', serviceBeginDate: '2023-05-05', serviceEndDate: '2023-07-20', units: 7, service: 'S9124', payer: 'Medicaid', status: 'Pending', elapsedDays: 100},
 ];
