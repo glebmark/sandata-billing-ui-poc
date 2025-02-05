@@ -94,15 +94,21 @@ export class FiltersAndTableOfVisitsComponent implements AfterViewInit {
 
     applyFilter(event: any, column: string) {
         const filterValue = event.target ? event.target.value.trim().toLowerCase() : event.value.trim().toLowerCase();
+        const columnToUpdate = this.allColumns.find(col => col.def === column);
+        if (columnToUpdate) {
+            columnToUpdate.filterValue = filterValue;
+        }
 
-        this.dataSource.filterPredicate = (data: any, filter: string) => {
-            const accumulator = (currentTerm: any, key: any) => {
-                return key === column ? currentTerm + data[key] : currentTerm;
-            };
-            const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
-            return dataStr.indexOf(filter) !== -1;
+        this.dataSource.filterPredicate = (data: any) => {
+            return this.allColumns.every(col => {
+                if (!col.filterValue) {
+                    return true;
+                }
+                const dataStr = data[col.def] ? data[col.def].toString().toLowerCase() : '';
+                return dataStr.indexOf(col.filterValue) !== -1;
+            });
         };
-        this.dataSource.filter = filterValue;
+        this.dataSource.filter = JSON.stringify(this.allColumns.map(col => col.filterValue));
     }
 
     clearFilters() {
