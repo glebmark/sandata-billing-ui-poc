@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FiltersAndTableOfVisitsComponent } from './filters-and-table-of-visits.component';
 
 @Component({
-  selector: 'app-views-page',
+  selector: 'app-visits-page',
   template: `
     <div>
       <app-sync />
@@ -13,7 +13,7 @@ import { FiltersAndTableOfVisitsComponent } from './filters-and-table-of-visits.
   `,
   imports: [CommonModule, SyncComponent, FiltersAndTableOfVisitsComponent]
 })
-export class ViewsPageComponent implements OnInit {
+export class VisitsPageComponent implements OnInit {
 
   constructor() { }
 
@@ -24,7 +24,7 @@ export class ViewsPageComponent implements OnInit {
 
 // LAYOUT:
 
-// parent component views-page
+// parent component visits-page
 // -- sync
 // -- filters + table of visits
 // ---- may be: filters

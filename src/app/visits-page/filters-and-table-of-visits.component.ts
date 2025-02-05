@@ -36,7 +36,7 @@ import { RouterModule } from '@angular/router';
         <button mat-button (click)="clearFilters()">Clear Filters</button>
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="link">
-                <th mat-header-cell *matHeaderCellDef> Link </th>
+                <th mat-header-cell *matHeaderCellDef> Details </th>
                 <td mat-cell *matCellDef="let element"> <a [routerLink]="['/visit', element.id]">View</a> </td>
             </ng-container>
             <ng-container *ngFor="let column of allColumns">
@@ -64,8 +64,6 @@ import { RouterModule } from '@angular/router';
     imports: [MatTableModule, MatSortModule, MatCheckboxModule, MatButtonModule, MatMenuModule, FormsModule, CommonModule, MatInputModule, MatSelectModule, RouterModule]
 })
 export class FiltersAndTableOfVisitsComponent implements AfterViewInit {
-    // fix filters, when type in into multiple filters
-    // they sometimes do not work together and work separately
     @ViewChild(MatSort) sort!: MatSort;
 
     allColumns = [
@@ -124,5 +122,3 @@ const ELEMENT_DATA = [
     {id: 4, firstName: 'Bob', lastName: 'Brown', serviceBeginDate: '2023-04-01', serviceEndDate: '2023-06-10', units: 12, service: 'T1019_01', payer: 'Private', status: 'Approved', elapsedDays: 150},
     {id: 5, firstName: 'Charlie', lastName: 'Davis', serviceBeginDate: '2023-05-05', serviceEndDate: '2023-07-20', units: 7, service: 'S9124', payer: 'Medicaid', status: 'Pending', elapsedDays: 100},
 ];
-
-// TODO rename views to visits

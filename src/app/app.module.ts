@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ViewsPageComponent } from './visits-page/views-page.component';
+import { VisitsPageComponent } from './visits-page/visits-page.component';
 import { RatePageComponent } from './rate-page/rate-page.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RateSubeditorComponent } from './rate-page/rate-subeditor.component';
@@ -32,7 +32,7 @@ import { VisitDetailsComponent } from './visits-page/visit-details/visit-details
     RateSubeditorComponent,
     RateViewerComponent,
     SyncComponent,
-    ViewsPageComponent,
+    VisitsPageComponent,
     VisitDetailsComponent
   ],
   providers: [],

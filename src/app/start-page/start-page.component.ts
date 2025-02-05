@@ -7,7 +7,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
     <h1>Welcome to the Sandata Billing UI</h1>
     <nav>
       <ul>
-        <li><a routerLink="/views">Views Page</a></li>
+        <li><a routerLink="/visits">Visit Page</a></li>
         <li><a routerLink="/rate">Rate Page</a></li>
       </ul>
     </nav>
@@ -17,5 +17,5 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 })
 export class StartPageComponent {}
 
-// TODO make backlinks to startpage from rates and views
+// TODO make backlinks to startpage from rates and visits
 // add "pwd" of pages
