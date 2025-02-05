@@ -1,6 +1,4 @@
-import { Component, ViewChild, ViewChildren, QueryList, ElementRef, AfterViewInit } from "@angular/core";
-import { FiltersOfVisitsComponent } from "./filters-of-visits.component";
-import { TableOfVisitsComponent } from "./table-of-visits.component";
+import { Component, ViewChild, AfterViewInit } from "@angular/core";
 import { MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,14 +9,13 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: "app-filters-and-table-of-visits",
     // TODO fix checkbox menu so it won't be closed after one click on checkbox
     template: `
     <div>
-        <app-filters-of-visits></app-filters-of-visits>
-        <app-table-of-visits></app-table-of-visits>
         <button mat-button [matMenuTriggerFor]="menu">Toggle Columns</button>
         <mat-menu #menu="matMenu">
             <mat-checkbox *ngFor="let column of allColumns" [(ngModel)]="column.visible" (change)="updateDisplayedColumns()"> {{column.name}} </mat-checkbox>
@@ -38,14 +35,18 @@ import { MatSelectModule } from '@angular/material/select';
         </div>
         <button mat-button (click)="clearFilters()">Clear Filters</button>
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="link">
+                <th mat-header-cell *matHeaderCellDef> Link </th>
+                <td mat-cell *matCellDef="let element"> <a [routerLink]="['/visit', element.id]">View</a> </td>
+            </ng-container>
             <ng-container *ngFor="let column of allColumns">
                 <ng-container *ngIf="column.visible" [matColumnDef]="column.def">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column.name}} </th>
                     <td mat-cell *matCellDef="let element"> {{element[column.def]}} </td>
                 </ng-container>
             </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-header-row *matHeaderRowDef="['link'].concat(displayedColumns)"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['link'].concat(displayedColumns);"></tr>
         </table>
     </div>
     `,
@@ -60,9 +61,11 @@ import { MatSelectModule } from '@angular/material/select';
             flex: 1 1 200px;
         }
     `],
-    imports: [FiltersOfVisitsComponent, TableOfVisitsComponent, MatTableModule, MatSortModule, MatCheckboxModule, MatButtonModule, MatMenuModule, FormsModule, CommonModule, MatInputModule, MatSelectModule]
+    imports: [MatTableModule, MatSortModule, MatCheckboxModule, MatButtonModule, MatMenuModule, FormsModule, CommonModule, MatInputModule, MatSelectModule, RouterModule]
 })
 export class FiltersAndTableOfVisitsComponent implements AfterViewInit {
+    // fix filters, when type in into multiple filters
+    // they sometimes do not work together and work separately
     @ViewChild(MatSort) sort!: MatSort;
 
     allColumns = [
@@ -109,9 +112,11 @@ export class FiltersAndTableOfVisitsComponent implements AfterViewInit {
 }
 
 const ELEMENT_DATA = [
-    {firstName: 'John', lastName: 'Doe', serviceBeginDate: '2023-01-01', serviceEndDate: '2023-03-10', units: 5, service: 'T1019_02', payer: 'DHCFP', status: 'Approved', elapsedDays: 452},
-    {firstName: 'Jane', lastName: 'Smith', serviceBeginDate: '2023-02-15', serviceEndDate: '2023-04-20', units: 10, service: 'S9123', payer: 'Medicaid', status: 'Pending', elapsedDays: 300},
-    {firstName: 'Alice', lastName: 'Johnson', serviceBeginDate: '2023-03-10', serviceEndDate: '2023-05-15', units: 8, service: 'H2015', payer: 'Medicare', status: 'Denied', elapsedDays: 200},
-    {firstName: 'Bob', lastName: 'Brown', serviceBeginDate: '2023-04-01', serviceEndDate: '2023-06-10', units: 12, service: 'T1019_01', payer: 'Private', status: 'Approved', elapsedDays: 150},
-    {firstName: 'Charlie', lastName: 'Davis', serviceBeginDate: '2023-05-05', serviceEndDate: '2023-07-20', units: 7, service: 'S9124', payer: 'Medicaid', status: 'Pending', elapsedDays: 100},
+    {id: 1, firstName: 'John', lastName: 'Doe', serviceBeginDate: '2023-01-01', serviceEndDate: '2023-03-10', units: 5, service: 'T1019_02', payer: 'DHCFP', status: 'Approved', elapsedDays: 452},
+    {id: 2, firstName: 'Jane', lastName: 'Smith', serviceBeginDate: '2023-02-15', serviceEndDate: '2023-04-20', units: 10, service: 'S9123', payer: 'Medicaid', status: 'Pending', elapsedDays: 300},
+    {id: 3, firstName: 'Alice', lastName: 'Johnson', serviceBeginDate: '2023-03-10', serviceEndDate: '2023-05-15', units: 8, service: 'H2015', payer: 'Medicare', status: 'Denied', elapsedDays: 200},
+    {id: 4, firstName: 'Bob', lastName: 'Brown', serviceBeginDate: '2023-04-01', serviceEndDate: '2023-06-10', units: 12, service: 'T1019_01', payer: 'Private', status: 'Approved', elapsedDays: 150},
+    {id: 5, firstName: 'Charlie', lastName: 'Davis', serviceBeginDate: '2023-05-05', serviceEndDate: '2023-07-20', units: 7, service: 'S9124', payer: 'Medicaid', status: 'Pending', elapsedDays: 100},
 ];
+
+// TODO rename views to visits

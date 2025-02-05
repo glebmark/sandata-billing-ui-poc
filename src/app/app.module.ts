@@ -14,6 +14,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { RateViewerComponent } from './rate-page/rate-viewer/rate-viewer.component';
 import { SyncComponent } from './visits-page/sync.component';
+import { VisitDetailsComponent } from './visits-page/visit-details/visit-details.component';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { SyncComponent } from './visits-page/sync.component';
     RateSubeditorComponent,
     RateViewerComponent,
     SyncComponent,
-    ViewsPageComponent
+    ViewsPageComponent,
+    VisitDetailsComponent
   ],
   providers: [],
 })
