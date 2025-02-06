@@ -141,7 +141,7 @@ export class RatesListViewerComponent {
 
     rateForm = new FormGroup({
         rateViewerForm: new FormGroup({
-            evvIdentifier: new FormControl(''),
+            evvIdentifier: new FormControl('123'),
             eventCode: new FormControl(''),
             effectiveDate: new FormControl(''),
             service: new FormControl(''),

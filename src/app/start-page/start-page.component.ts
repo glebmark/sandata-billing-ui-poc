@@ -19,3 +19,14 @@ export class StartPageComponent {}
 
 // TODO make backlinks to startpage from rates and visits
 // add "pwd" of pages
+
+// - add auth to endpoint calls
+
+
+
+// review:
+// benifits:
+// - when you create a form (not complex with multiple steps)
+// you don't need to use any state
+// like in React because reactive forms inherently manage their own state
+// -

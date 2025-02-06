@@ -67,7 +67,7 @@ export class SyncComponent {
 
 
             // TODO
-            // sync data with output to visits-page
+            // sync data and send data as @Output to visits-page
             // emit data here
         }
 }

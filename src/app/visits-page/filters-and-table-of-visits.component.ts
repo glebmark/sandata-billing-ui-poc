@@ -35,18 +35,18 @@ import { RouterModule } from '@angular/router';
         </div>
         <button mat-button (click)="clearFilters()">Clear Filters</button>
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-            <ng-container matColumnDef="link">
-                <th mat-header-cell *matHeaderCellDef> Details </th>
-                <td mat-cell *matCellDef="let element"> <a [routerLink]="['/visit', element.id]">View</a> </td>
-            </ng-container>
             <ng-container *ngFor="let column of allColumns">
                 <ng-container *ngIf="column.visible" [matColumnDef]="column.def">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column.name}} </th>
                     <td mat-cell *matCellDef="let element"> {{element[column.def]}} </td>
                 </ng-container>
             </ng-container>
-            <tr mat-header-row *matHeaderRowDef="['link'].concat(displayedColumns)"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['link'].concat(displayedColumns);"></tr>
+            <ng-container matColumnDef="link">
+                <th mat-header-cell *matHeaderCellDef> Link </th>
+                <td mat-cell *matCellDef="let element"> <a [routerLink]="['/visit', element.id]">View</a> </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns.concat('link')"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns.concat('link');"></tr>
         </table>
     </div>
     `,
@@ -64,6 +64,8 @@ import { RouterModule } from '@angular/router';
     imports: [MatTableModule, MatSortModule, MatCheckboxModule, MatButtonModule, MatMenuModule, FormsModule, CommonModule, MatInputModule, MatSelectModule, RouterModule]
 })
 export class FiltersAndTableOfVisitsComponent implements AfterViewInit {
+    // fix filters, when type in into multiple filters
+    // they sometimes do not work together and work separately
     @ViewChild(MatSort) sort!: MatSort;
 
     allColumns = [
@@ -92,21 +94,15 @@ export class FiltersAndTableOfVisitsComponent implements AfterViewInit {
 
     applyFilter(event: any, column: string) {
         const filterValue = event.target ? event.target.value.trim().toLowerCase() : event.value.trim().toLowerCase();
-        const columnToUpdate = this.allColumns.find(col => col.def === column);
-        if (columnToUpdate) {
-            columnToUpdate.filterValue = filterValue;
-        }
 
-        this.dataSource.filterPredicate = (data: any) => {
-            return this.allColumns.every(col => {
-                if (!col.filterValue) {
-                    return true;
-                }
-                const dataStr = data[col.def] ? data[col.def].toString().toLowerCase() : '';
-                return dataStr.indexOf(col.filterValue) !== -1;
-            });
+        this.dataSource.filterPredicate = (data: any, filter: string) => {
+            const accumulator = (currentTerm: any, key: any) => {
+                return key === column ? currentTerm + data[key] : currentTerm;
+            };
+            const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
+            return dataStr.indexOf(filter) !== -1;
         };
-        this.dataSource.filter = JSON.stringify(this.allColumns.map(col => col.filterValue));
+        this.dataSource.filter = filterValue;
     }
 
     clearFilters() {
@@ -122,3 +118,5 @@ const ELEMENT_DATA = [
     {id: 4, firstName: 'Bob', lastName: 'Brown', serviceBeginDate: '2023-04-01', serviceEndDate: '2023-06-10', units: 12, service: 'T1019_01', payer: 'Private', status: 'Approved', elapsedDays: 150},
     {id: 5, firstName: 'Charlie', lastName: 'Davis', serviceBeginDate: '2023-05-05', serviceEndDate: '2023-07-20', units: 7, service: 'S9124', payer: 'Medicaid', status: 'Pending', elapsedDays: 100},
 ];
+
+// TODO rename views to visits
