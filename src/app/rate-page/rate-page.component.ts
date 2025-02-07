@@ -16,7 +16,6 @@ import { Router } from '@angular/router';
         <app-service-rate-page />
       </mat-tab>
       <mat-tab label="Exchange Profiles">
-        <!-- Content for Exchange Profiles -->
       </mat-tab>
     </mat-tab-group>
   `,
