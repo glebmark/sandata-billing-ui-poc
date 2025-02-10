@@ -8,7 +8,7 @@ import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from "@angular
 import { RateSubeditorComponent } from "./rate-subeditor.component";
 import { CommonModule } from '@angular/common';
 import { RateViewerComponent } from "./rate-viewer/rate-viewer.component";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 
 export enum RateType {
     GeneralRate = 'generalRate',
@@ -61,10 +61,10 @@ export enum RateType {
                          [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                         <div class="example-element-diagram">
                             <form [formGroup]="rateForm">
-                                <app-rate-viewer />
+                                <app-rate-viewer formGroupName="rateViewerForm" />
                                 <div formArrayName="rateSubeditorForms">
                                     <div *ngFor="let rateSubeditorForm of rateSubeditorForms.controls; let i = index">
-                                        <app-rate-dynamic-subeditor [formGroupIndex]="i" [rateType]="rateTypes[i]" />
+                                        <app-rate-dynamic-subeditor [formGroupIndex]="i" [rateType]="rateTypes[i]" ></app-rate-dynamic-subeditor>
                                     </div>
                                 </div>
                                 <button mat-raised-button color="primary" (click)="getFormInput()">Save</button>
@@ -127,13 +127,15 @@ export enum RateType {
 })
 export class RatesListViewerComponent {
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+        this.getRateData()
+    }
 
     welcome = "Welcome to the Rates List Viewer!";
 
     displayedColumns: string[] = ['evvIdentifier', 'eventCode', 'effectiveDate', 'service', 'rate', 'copay', 'description'];
 
-    dataSource = new MatTableDataSource(ELEMENT_DATA);
+    dataSource = new MatTableDataSource(ELEMENT_DATA); // 
 
     expandedElement: RateElement | null = null;
 
@@ -141,7 +143,7 @@ export class RatesListViewerComponent {
 
     rateForm = new FormGroup({
         rateViewerForm: new FormGroup({
-            evvIdentifier: new FormControl('123'),
+            evvIdentifier: new FormControl(''),
             eventCode: new FormControl(''),
             effectiveDate: new FormControl(''),
             service: new FormControl(''),
@@ -199,6 +201,8 @@ export class RatesListViewerComponent {
         ).subscribe({
             next: response => {
                 console.log('Form submitted successfully', response);
+                // const parsedData = this.parseRateFormData(response);
+                // this.rateForm.setValue(parsedData);
             },
             error: error => {
                 console.error('Error submitting form', error);
@@ -213,6 +217,8 @@ export class RatesListViewerComponent {
             this.rateForm.value, { params: params2 }).subscribe({
             next: response => {
             console.log('Form submitted successfully', response);
+            // const parsedData = this.parseRateFormData(response);
+            // this.rateForm.setValue(parsedData);
             },
             error: error => {
             console.error('Error submitting form', error);
@@ -227,6 +233,8 @@ export class RatesListViewerComponent {
             this.rateForm.value, { params: params3 }).subscribe({
             next: response => {
             console.log('Form submitted successfully', response);
+            // const parsedData = this.parseRateFormData(response);
+            // this.rateForm.setValue(parsedData);
             },
             error: error => {
             console.error('Error submitting form', error);
@@ -237,6 +245,83 @@ export class RatesListViewerComponent {
     onCancel(): void {
         this.expandedElement = null;
     }
+
+    parseRateFormData(response: any) {
+        const rateData = response.result.rates[0];
+        const rateFormValue = {
+          rateViewerForm: {
+            evvIdentifier: rateData.identifier[0].value,
+            eventCode: rateData.data['event-code'] || '',
+            effectiveDate: rateData.effectiveDate,
+            service: rateData.code.coding[0].code,
+            modifier: rateData.data.modifier || '',
+            revcode: rateData.data.revcode || '',
+            description: rateData.data.description || '',
+            payer: rateData.payor.identifier.value,
+            program: rateData.data.program || '',
+            memberId: rateData.data['member-id'] || '',
+            tags: rateData.data.tags || '',
+            copayType: rateData.data['copay-type'] || '',
+            copayRate: rateData.data['copay-rate'] || '',
+            claimType: rateData.data['claim-type'] || '',
+            rollUpType: rateData.data['roll-up-type'] || '',
+            placeOfService: rateData.placeOfService || ''
+          },
+          rateSubeditorForms: [
+            {
+              rateType: 'generalRate',
+              staticRate: rateData.data.rate['static-rate'] || '',
+              dynamicUnits: rateData.data.rate['dynamic-units'] || '',
+              dynamicRate: rateData.data.rate['dynamic-rate'] || '',
+              dynamicModifier: rateData.data.rate['dynamic-modifier'] || ''
+            },
+            {
+              rateType: 'weekendRate',
+              staticRate: rateData.data['weekend-rate']['static-rate'] || '',
+              dynamicUnits: rateData.data['weekend-rate']['dynamic-units'] || '',
+              dynamicRate: rateData.data['weekend-rate']['dynamic-rate'] || '',
+              dynamicModifier: rateData.data['weekend-rate']['dynamic-modifier'] || ''
+            },
+            {
+              rateType: 'holidayRate',
+              staticRate: rateData.data['holiday-rate']['static-rate'] || '',
+              dynamicUnits: rateData.data['holiday-rate']['dynamic-units'] || '',
+              dynamicRate: rateData.data['holiday-rate']['dynamic-rate'] || '',
+              dynamicModifier: rateData.data['holiday-rate']['dynamic-modifier'] || ''
+            }
+          ]
+        };
+        return rateFormValue;
+      }
+
+      getRateData() {
+        const params = new HttpParams()
+          .set('_format', 'json')
+          .set('_m', 'billing.rpc/get-rates');
+
+        const headers = new HttpHeaders()
+            .set('Accept', 'application/json')
+            .set('cache-control', 'no-cache')
+            .set('content-type', 'application/json')
+            .set('x-auth-method', 'aspxauth');
+
+        const body = {"method":"billing.rpc/get-rates","params":{"payor":"dsfsf","as-of-date":"2025-02-10"}}
+    
+        this.http.request('POST', `http://localhost:8080/fhir/Organization/96010/rpc`, 
+            { params, headers, body, withCredentials: true }).subscribe({
+          next: response => {
+            console.log('Form submitted successfully', response);
+            const parsedData = this.parseRateFormData(response);
+            this.rateForm.setValue(parsedData);
+
+            console.log("Rate data:");
+            console.log(this.rateForm.value)
+          },
+          error: error => {
+            console.error('Error submitting form', error);
+          }
+        });
+      }
 }
 
 export interface RateElement {

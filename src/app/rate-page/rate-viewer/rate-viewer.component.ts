@@ -36,5 +36,7 @@ export class RateViewerComponent implements OnInit {
 
   ngOnInit(): void {
     this.form  = this.controlContainer.control?.get('rateViewerForm') as FormGroup;
+    console.log("Data inside RateViewerComponent")
+    console.log(this.form)
   }
 }
