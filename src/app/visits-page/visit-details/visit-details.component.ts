@@ -1,5 +1,4 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { HttpClient, HttpParams,  } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
       <button mat-raised-button color="primary" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <!-- <button mat-button (click)="getVisitDetails()">Get Visit Details</button> -->
+      <button mat-button (click)="getVisitDetails()">Get Visit Details</button>
       <div class="info-row">
         <div>Last Updated: {{ lastUpdated }}</div>
         <div>Total Billed: {{ totalBilled | currency:'USD' }}</div>
@@ -192,30 +191,16 @@ export class VisitDetailsComponent implements OnInit {
     // Add more service lines as needed
   ];
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,  
+    private router: Router) {}
 
   ngOnInit(): void {
     this.visitId = +this.route.snapshot.paramMap.get('id')!;
   }
 
   getVisitDetails() {
-    const url = 'http://localhost:8080/fhir/Organization/96010/rpc';
-    const params = new HttpParams()
-      .set('_format', 'json')
-      .set('_m', 'aidbox.billing.rpc/get-encounter');
-    const body = {
-      visitId: this.visitId
-    };
 
-    this.http.request('GET', url, { params, body }).subscribe({
-      next: response => {
-        this.visitDetails = response;
-        console.log('Visit details fetched successfully', response);
-      },
-      error: error => {
-        console.error('Error fetching visit details', error);
-      }
-    });
   }
 
   goBack() {

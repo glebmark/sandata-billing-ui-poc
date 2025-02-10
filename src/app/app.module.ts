@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RateViewerComponent } from './rate-page/rate-viewer/rate-viewer.component';
 import { SyncComponent } from './visits-page/sync.component';
 import { VisitDetailsComponent } from './visits-page/visit-details/visit-details.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   imports: [
@@ -35,6 +36,6 @@ import { VisitDetailsComponent } from './visits-page/visit-details/visit-details
     VisitsPageComponent,
     VisitDetailsComponent
   ],
-  providers: [],
+  providers: [CookieService],
 })
 export class AppModule {}
