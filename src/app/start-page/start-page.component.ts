@@ -58,3 +58,21 @@ export class StartPageComponent {}
 // so all functionality of Reactive Forms with internal state managment
 // and other features will be available
 // 2) see https://chatgpt.com/c/67a5d5c7-aaec-800c-a085-2045fbce1e7e
+
+// components = object model
+// reactivity = FP
+
+
+
+// questions:
+// is it possible to render HTML dynamicly after we've fetched data from server?
+// A: yes, by using innerHTML + Using ng-container and *ngIf + 2 more methods
+
+// is it possible to pass custom HTML inside Angular's table?
+// A: yes, Using ng-template for Custom Cells
+
+// is it possible to add custom logic when we for example click on tab
+// A: yes, Using a Simple ngClass and Click Event
+
+// is it possible to check out what is going on inside data flow from UI to data in class (how to debug)
+// A: yes, ngModelChange + Angular DevTools + getter and setter
